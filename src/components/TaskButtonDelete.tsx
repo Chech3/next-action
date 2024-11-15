@@ -1,23 +1,14 @@
-import React from 'react'
-import { Button } from './ui/button'
-import prisma from '@/lib/prisma'
-
-
-
-const TaskButtonDelete = ({taskId} : {taskId: number }) => {
-
-    async function deleteTask (formData: FormData) {
-        'use server'
-        const taskId = formData.get('id')?.toString()
-
-        console.log(taskId);
-    }
+import React from "react";
+import { Button } from "./ui/button";
+import {deleteTask} from "@/actions/task-actions"
+const TaskButtonDelete = ({ taskId }: { taskId: number }) => {
+  
   return (
     <form action={deleteTask}>
-        <input type="hidden" value={taskId} />
-        <Button variant="destructive">Delete</Button>
+      <input type="hidden" name="taskId" value={taskId} />
+      <Button variant="destructive">Delete</Button>
     </form>
-  )
-}
+  );
+};
 
-export default TaskButtonDelete
+export default TaskButtonDelete;

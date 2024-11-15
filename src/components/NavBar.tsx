@@ -5,13 +5,15 @@ import { buttonVariants } from "./ui/button";
 const NavBar = () => {
   return (
     <nav className="flex justify-between py-5">
+      <Link href={"/"}>
       <h1 className="text-3xl font-bold">Next action</h1>
+      </Link>
 
       <div className="flex gap-x-2 items-center">
         <Link href="/new" className={buttonVariants({ variant: "secondary" })}>
           Add Task
         </Link>
-        <ModeToggle></ModeToggle>
+        <ModeToggle />
       </div>
     </nav>
   );

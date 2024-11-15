@@ -1,6 +1,7 @@
-import * as React from "react";
 
-import { Button } from "@/components/ui/button";
+
+import { Button, buttonVariants } from "@/components/ui/button";
+
 import {
   Card,
   CardContent,
@@ -19,14 +20,18 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { createTask } from "@/actions/task-actions";
+import { createTask, updateTask } from "@/actions/task-actions";
+import { Task } from "@prisma/client";
+import Link from "next/link";
 
 
-export function CardWithForm() {
-  
+export function CardWithForm({task}: {task: Task}) {
+
+  const changeFunction = task?.id ? updateTask : createTask
 
   return (
-    <form action={createTask}>
+    <form action={changeFunction}>
+      <input type="hidden" name="id" value={task?.id} />
       <Card className="w-[350px]">
         <CardHeader>
           <CardTitle>Create Task</CardTitle>
@@ -38,11 +43,12 @@ export function CardWithForm() {
           <div className="grid w-full items-center gap-4">
             <div className="flex flex-col space-y-1.5">
               <Label htmlFor="name">Name</Label>
-              <Input id="name" name="name" placeholder="Name of your project" />
+              <Input defaultValue={task?.name} id="name" name="name" placeholder="Name of your project" />
             </div>
             <div className="flex flex-col space-y-1.5">
               <Label htmlFor="description">Description</Label>
               <Textarea
+              defaultValue={task?.description || ""}
                 name="description"
                 id="description"
                 placeholder="Description of your task"
@@ -50,7 +56,7 @@ export function CardWithForm() {
             </div>
             <div className="flex flex-col space-y-1.5">
               <Label htmlFor="priority">Priority</Label>
-              <Select name="priority">
+              <Select name="priority" defaultValue={task?.priority}>
                 <SelectTrigger id="priority">
                   <SelectValue placeholder="Select" />
                 </SelectTrigger>
@@ -64,10 +70,12 @@ export function CardWithForm() {
           </div>
         </CardContent>
         <CardFooter className="flex justify-between">
-          <Button type="submit" variant="outline">
+          <Link href="/" className={buttonVariants({variant: "secondary"})}>
             Cancel
+          </Link>
+          <Button type="submit">
+            {task?.id ? "Update" : "Send"}
           </Button>
-          <Button>Send</Button>
         </CardFooter>
       </Card>
     </form>

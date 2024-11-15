@@ -1,5 +1,6 @@
 "use server";
 import prisma from "@/lib/prisma";
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 export const createTask = async (FormData: FormData) => {
@@ -18,3 +19,40 @@ export const createTask = async (FormData: FormData) => {
     console.log(newTask);
     redirect("/")
   };
+
+
+  export async function deleteTask(formData: FormData) {
+    "use server";
+    const taskId = formData.get("taskId")?.toString();
+
+    if (!taskId) return;
+
+    await prisma.task.delete({
+      where: {
+        id: parseInt(taskId)
+      }
+    })
+
+      revalidatePath("/")
+  }
+
+  export async function updateTask(formData: FormData) {
+    const id = formData.get("id")?.toString();
+    const name = formData.get("name")?.toString();
+    const description = formData.get("description")?.toString();
+    const priority = formData.get("priority")?.toString();
+
+    if(!id || !name || !description || !priority ) return;
+
+     await prisma.task.update({
+      where: {
+        id: parseInt(id)
+      },
+      data: {
+        name: name,
+        description: description,
+        priority: priority
+      }
+    })
+    redirect("/")
+  }
